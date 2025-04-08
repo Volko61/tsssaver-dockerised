@@ -1,0 +1,40 @@
+services:
+  tssaver:
+    build:
+      context: .
+    container_name: tssaver
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tssaver.rule=Host(`tssaver.volko.org`)"
+      - "traefik.http.routers.tssaver.entrypoints=websecure"
+      - "traefik.http.routers.tssaver.tls.certresolver=myresolver"
+      - "traefik.http.services.tssaver.loadbalancer.server.port=80"
+    networks:
+      - traefik_network
+    depends_on:
+      - db
+    volumes:
+      - shsh_data:/var/www/tssaver/shsh  # Persistent storage for SHSH blobs
+
+  db:
+    image: mysql:8.0
+    container_name: tssaver_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword    # Change this
+      MYSQL_DATABASE: tsssaver             # Matches $db['name']
+      MYSQL_USER: tssaver_user             # Matches $db['user']
+      MYSQL_PASSWORD: tssaver_password     # Matches $db['password']
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - traefik_network
+
+networks:
+  traefik_network:
+    external: true
+
+volumes:
+  db_data:
+  shsh_data:
