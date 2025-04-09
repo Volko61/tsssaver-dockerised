@@ -15,17 +15,17 @@ services:
     depends_on:
       - db
     volumes:
-      - shsh_data:/var/www/tssaver/shsh  # Persistent storage for SHSH blobs
+      - shsh_data:/var/www/tssaver/shsh
 
   db:
     image: mysql:8.0
     container_name: tssaver_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword    # Change this
-      MYSQL_DATABASE: tsssaver             # Matches $db['name']
-      MYSQL_USER: tssaver_user             # Matches $db['user']
-      MYSQL_PASSWORD: tssaver_password     # Matches $db['password']
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: tsssaver
+      MYSQL_USER: tssaver_user
+      MYSQL_PASSWORD: tssaver_password
     volumes:
       - db_data:/var/lib/mysql
     networks:
